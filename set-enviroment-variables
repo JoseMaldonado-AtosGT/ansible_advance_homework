@@ -1,0 +1,9 @@
+D=`hostname | awk -F. '{print $2}'`
+TOWER_GUID="c198"
+OSP_GUID="0adf"
+OPENTLC_LOGIN="jose.maldonado3-atos.net"
+OPENTLC_PASSWORD="Kirito*-2020"
+GITHUB_REPO="https://github.com/JoseMaldonado-AtosGT/ansible_advance_homework"
+JQ_REPO_BASE="http://www.opentlc.com/download/ansible_bootcamp"
+REGION="CentralAmerica"
+RH_MAIL_ID="jose.maldonado3@atos.net"
