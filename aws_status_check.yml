@@ -1,4 +1,4 @@
-- hosts: awsbastion
+- hosts: tag_instance_filter_three_tier_app_jose_maldonado3_atos_net 
   gather_facts: false
   tasks:
   - name: Check the instances status
