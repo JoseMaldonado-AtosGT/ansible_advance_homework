@@ -14,7 +14,6 @@
     #scm_credential: "/root/ansible_advance_homework/gitpass.yml"
     #scm_credential: git_key
 
-
 - name: Machine Credentail to connect to workstation using openstack.pub
   tower_credential:
     name: Connect_to_workstation

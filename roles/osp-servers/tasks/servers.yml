@@ -1,4 +1,4 @@
-# tasks file for osp.servers
+---
 - name: Create new server instance "{{ item.name }}"
   os_server:
     cloud: ospcloud
@@ -31,9 +31,18 @@
 
 - debug: var=floatingip.floating_ip.floating_ip_address
 
-- name: Wait for  server to be available "{{ item.name }}"
+- name: OpenStack servers
+  os_server_info:
+    cloud: ospcloud
+  register: result
+
+
+- name: Wait for server to be available
   wait_for:
-    timeout: 600
-    host: "{{ floatingip.floating_ip.floating_ip_address }}"
+    host: "{{ item.public_v4 }}"
     port: 22
-    state: present
+    search_regex: OpenSSH
+    timeout: 600
+  delegate_to: "{{ inventory_hostname }}"
+  with_items: 
+    - "{{ result.openstack_servers }}"

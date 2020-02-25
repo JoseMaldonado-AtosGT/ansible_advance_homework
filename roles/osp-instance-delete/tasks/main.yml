@@ -1,13 +1,10 @@
 ---
-# tasks file for roles/osp-instance-delete
-  - name: Fetch Instance Info
-  - name: Delete instances
-
+# tasks file for roles/osp-instance-delete by Luis Pacheco
 - name: Fetch Instance Info that are running
   os_server_facts:
     cloud: ospcloud
-    region_name: us-east-1
-  register: result
+    region_name: us-east-1 
+    register: result
 
 - debug:
    var: result
@@ -18,4 +15,4 @@
    cloud: ospcloud
    name: "{{ item.name }}"
    state: absent
-  with_items: "{{result.ansible_facts.openstack_servers}}"       
+  with_items: "{{result.ansible_facts.openstack_servers}}"
