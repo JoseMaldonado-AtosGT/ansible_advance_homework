@@ -1,4 +1,5 @@
-- hosts: tag_instance_filter_three_tier_app_jose_maldonado3_atos_net 
+# hosts: tag_instance_filter_three_tier_app_jose_maldonado3_atos_net 
+- hosts: tag_instance_filter_three_tier_app_*
   gather_facts: false
   tasks:
   - name: Check the instances status
