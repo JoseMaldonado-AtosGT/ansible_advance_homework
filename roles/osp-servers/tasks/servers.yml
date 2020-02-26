@@ -1,45 +1,48 @@
 ---
-
-# tasks file for osp.servers
-#- name: Create new server instances and attaches them a network and passes metadata to the instance
-
-- name: Create a server instance "{{ item.value.name }}"
+- name: Create new server instance "{{ item.name }}"
   os_server:
     cloud: ospcloud
-    name: "{{ item.value.name }}"
-    image: rhel-guest
-    meta: "group={{ item.value.meta.group }},deployment_name={{ item.value.meta.deployment_name }}"
-    flavor: "{{ item.value.flavor }}"
-    security_groups: "{{ item.value.security_group }}"
-    key_name: ansible_ssh
-    wait: yes
+    name: "{{ item.name }}"
+    image: "{{ item.image }}"
+    meta: "group={{ item.group }},deployment_name={{ item.deployment_name }}"
+    flavor: "{{ item.flavor }}"
+    security_groups: "{{ item.security_group }}"
+    key_name: "{{ item.key_name }}"
     nics:
     - net-name: int_network
     userdata: |
       #!/bin/bash
       curl -o /tmp/openstack.pub http://www.opentlc.com/download/ansible_bootcamp/openstack_keys/openstack.pub
       cat /tmp/openstack.pub >> /home/cloud-user/.ssh/authorized_keys
-  register: instanceip
+      curl -o /tmp/internal.repo http://www.opentlc.com/download/ansible_bootcamp/repo/internal.repo
+      cp /tmp/internal.repo /etc/yum.repos.d/internal.repo
+  register: servername
 
-
-- name: Add floating IP to "{{ item.value.name }}"
+- name: Add floating IP to Servers "{{ item.name }}"
   os_floating_ip:
     cloud: ospcloud
     state: present
     reuse: yes
-    server: "{{ item.value.name }}"
+    server: "{{ item.name }}"
     network: ext_network
     wait: true
     timeout: 180
-  register: instancefloatingip
-  
-- name: Show "{{ instanceip }}" public IP
-  debug: var=instancefloatingip.floating_ip.floating_ip_address
+  register: floatingip
 
-- name: Wait for "{{ item.value.name }}" to be available
+- debug: var=floatingip.floating_ip.floating_ip_address
+
+- name: OpenStack servers
+  os_server_info:
+    cloud: ospcloud
+  register: result
+
+
+- name: Wait for server to be available
   wait_for:
-    host: "{{ instancefloatingip.floating_ip.floating_ip_address }}"
+    host: "{{ item.public_v4 }}"
     port: 22
     search_regex: OpenSSH
     timeout: 600
   delegate_to: "{{ inventory_hostname }}"
+  with_items: 
+    - "{{ result.openstack_servers }}"

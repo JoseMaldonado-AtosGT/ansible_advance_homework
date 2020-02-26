@@ -2,8 +2,5 @@
 
 # tasks file for osp.servers
 
-- name: include role and loop with vars file
-  include_tasks:
-    file: servers.yml
-  loop: "{{ osp_servers|dict2items }}"
-  when: item.value != 
+- include_tasks: servers.yml
+  with_items: "{{ osp_servers }}"
