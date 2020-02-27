@@ -5,6 +5,6 @@
 
 - name: include role and loop with vars file
   include_tasks:
-    file: create_instance.yml
+    file: servers.yml
   loop: "{{ osp_servers|dict2items }}"
   when: item.value != ""
