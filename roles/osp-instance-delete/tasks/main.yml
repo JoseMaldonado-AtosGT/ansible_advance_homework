@@ -1,9 +1,9 @@
 ---
-# tasks file for roles/osp-instance-delete by Luis Pacheco
+# tasks file for roles/osp-instance-delete 
 - name: Fetch Instance Info that are running
   os_server_facts:
     cloud: ospcloud
-    region_name: us-east-1 
+    region_name: RegionOne
     register: result
 
 - debug:
